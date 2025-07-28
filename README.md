@@ -23,20 +23,21 @@ This project is a solution for the "Connecting the Dots" Challenge, where the go
 ## Directory Structure
 
 ```
-project_root/
+project_root/                     # Your project directory
 │
-├── Collection1/                  # Example input/output directory
-│   ├── challenge1b_input.json     # Input persona/job JSON
-│   ├── PDFs/                     # All input PDFs go here
-│   ├── outlines/                 # Per-PDF outline JSONs (output)
-│   └── challenge1b_output.json   # Final output JSON
-│
-├── src/
-│   ├── main_local.py             # Main pipeline (run this)
-│   └── tools/                    # PDF loading, text extraction, heading detection
-│
+├── main_local.py                 # Main pipeline script
+├── process_pdfs.py               # PDF processing utility
+├── tools/                        # PDF loading, text extraction, heading detection
 ├── requirements.txt              # Python dependencies
+├── Dockerfile                    # Docker configuration
 └── README.md                     # This file
+
+your_input_directory/             # Can be anywhere on your system
+│
+├── challenge1b_input.json         # Input persona/job JSON
+├── PDFs/                         # All input PDFs go here
+├── outlines/                     # Per-PDF outline JSONs (output) - created automatically
+└── challenge1b_output.json       # Final output JSON - created automatically
 ```
 
 ## How to Run Locally (No Docker Required)
@@ -55,13 +56,16 @@ project_root/
 3. **Run the pipeline:**
 
    ```bash
-   cd src
-   python3 main_local.py ../<your_input_dir>
+   python3 main_local.py <path_to_your_input_directory>
    ```
 
-   - For example, if your input directory is `Collection1`, run:
+   - For example, if your input directory is `/home/user/documents/Collection1`, run:
      ```bash
-     python3 main_local.py ../Collection1
+     python3 main_local.py /home/user/documents/Collection1
+     ```
+   - Or if it's `C:\Users\username\Desktop\Collection1`, run:
+     ```bash
+     python3 main_local.py "C:\Users\username\Desktop\Collection1"
      ```
 
 4. **Check your outputs:**
@@ -98,13 +102,13 @@ docker run --rm -v /absolute/path/to/your/input:/input pdf-intelligence-pipeline
 **For Windows (PowerShell):**
 
 ```bash
-docker run --rm -v "C:\Users\username\Desktop\Collection1\Collection1:/input" pdf-intelligence-pipeline python main_local.py /input
+docker run --rm -v "C:\path\to\your\input\directory:/input" pdf-intelligence-pipeline python main_local.py /input
 ```
 
 **For Windows (Git Bash):**
 
 ```bash
-docker run --rm -v "/c/Users/username/Desktop/Collection1/Collection1:/input" pdf-intelligence-pipeline python main_local.py /input
+docker run --rm -v "/c/path/to/your/input/directory:/input" pdf-intelligence-pipeline python main_local.py /input
 ```
 
 - Replace the path with the full path to your input directory on your machine.
