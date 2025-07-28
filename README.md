@@ -70,13 +70,15 @@ project_root/
 
 ## How to Run with Docker
 
-You can run the pipeline using Docker, which ensures all dependencies are pre-installed and avoids repeated package installations.
+You can run the pipeline using Docker, which ensures all dependencies and models are pre-installed and avoids repeated package installations.
 
 ### 1. Build the Docker Image
 
 ```bash
 docker build -t pdf-intelligence-pipeline .
 ```
+
+**Note:** This build will take 10-20 minutes as it downloads and installs all Python packages and pre-downloads the required ML models (~2GB total).
 
 ### 2. Prepare Your Input Directory
 
@@ -87,16 +89,31 @@ docker build -t pdf-intelligence-pipeline .
 
 Mount your input directory as a volume and run the container:
 
+**For Linux/Mac:**
+
 ```bash
-docker run --rm -v /absolute/path/to/your/input:/input pdf-intelligence-pipeline /input
+docker run --rm -v /absolute/path/to/your/input:/input pdf-intelligence-pipeline python main_local.py /input
 ```
 
-- Replace `/absolute/path/to/your/input` with the full path to your input directory on your machine.
+**For Windows (PowerShell):**
+
+```bash
+docker run --rm -v "C:\Users\username\Desktop\Collection1\Collection1:/input" pdf-intelligence-pipeline python main_local.py /input
+```
+
+**For Windows (Git Bash):**
+
+```bash
+docker run --rm -v "/c/Users/username/Desktop/Collection1/Collection1:/input" pdf-intelligence-pipeline python main_local.py /input
+```
+
+- Replace the path with the full path to your input directory on your machine.
 - The outputs will be written to the same mounted directory.
 
 ### Notes
 
-- All Python dependencies are installed at build time, so running the container is fast and does not reinstall packages.
+- All Python dependencies and ML models are installed at build time, so running the container is fast and does not require internet access.
+- The container runs completely offline after the initial build.
 - You can still run the pipeline locally as described above if you prefer.
 
 ## Input/Output Format
