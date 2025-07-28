@@ -5,6 +5,8 @@ FROM python:3.10
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV HF_HOME=/app/hf_cache
+ENV TRANSFORMERS_CACHE=/app/hf_cache
+ENV SENTENCE_TRANSFORMERS_HOME=/app/hf_cache
 
 # Set work directory
 WORKDIR /app
@@ -25,6 +27,10 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
     pip install -r requirements.txt
+
+# Pre-download models to ensure no internet access needed at runtime
+RUN python -c "from transformers import pipeline; pipeline('summarization', model='sshleifer/distilbart-cnn-12-6')"
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
 
 # Copy project files
 COPY . .
